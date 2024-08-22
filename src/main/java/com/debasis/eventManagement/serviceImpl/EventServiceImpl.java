@@ -125,9 +125,7 @@ public class EventServiceImpl implements EventService {
 
             Event event = optionalEvent.get();
 
-            if (!event.getOrganizer().getId().equals(userId)) {
-                throw new EventException("Event does not belong to the user with ID: " + userId);
-            }
+
             event.setOrganizer(null);
 
             eventRepository.deleteById(event.getEventId());
@@ -151,22 +149,19 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponse updateById(Long userId, Long eventId, EventDTO eventDetails) {
         EventResponse response = new EventResponse();
+
         try {
-            Optional<User> user = userRepository.findById(userId);
-            if (!user.isPresent()) {
+            Optional<User> userOptional = userRepository.findById(userId);
+            if (!userOptional.isPresent()) {
                 throw new UserException("User not found with ID: " + userId);
             }
 
-            Optional<Event> optionalEvent = eventRepository.findById(eventId);
-            if (!optionalEvent.isPresent()) {
+            Optional<Event> eventOptional = eventRepository.findById(eventId);
+            if (!eventOptional.isPresent()) {
                 throw new EventException("Event not found with ID: " + eventId);
             }
 
-            Event event = optionalEvent.get();
-
-            if (!event.getOrganizer().getId().equals(userId)) {
-                throw new EventException("Event does not belong to the user with ID: " + userId);
-            }
+            Event event = eventOptional.get();
 
             event.setTitle(eventDetails.getTitle());
             event.setDescription(eventDetails.getDescription());
@@ -180,10 +175,9 @@ public class EventServiceImpl implements EventService {
                 event.setTicketPricing(ticketPricingRepository.save(newPricing));
             }
 
-            Event updatedEvent = eventRepository.save(event);
+            event = eventRepository.save(event);
 
-
-            response.setEvent(Utils.mapEventEntityToEventDTO(updatedEvent));
+            response.setEvent(Utils.mapEventEntityToEventDTO(event));
             response.setMessage("Event updated successfully");
             response.setStatusCode(200);
 
@@ -197,6 +191,7 @@ public class EventServiceImpl implements EventService {
             response.setMessage("Event update failed: " + e.getMessage());
             response.setStatusCode(500);
         }
+
         return response;
     }
 

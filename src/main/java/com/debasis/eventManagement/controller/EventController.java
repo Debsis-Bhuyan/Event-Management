@@ -57,7 +57,7 @@ public class EventController {
     }
 
     @PutMapping("/update/{eventId}")
-    public ResponseEntity<EventResponse> updateEvent(@PathVariable Long userId,@PathVariable Long eventId, @RequestBody EventDTO eventDetails) {
+    public ResponseEntity<EventResponse> updateEvent(@PathVariable Long eventId, @RequestBody EventDTO eventDetails) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -65,8 +65,8 @@ public class EventController {
         EventResponse updatedEventResponse = eventService.updateById(Long.valueOf( currentUser.getId()), eventId, eventDetails);
         return ResponseEntity.status(updatedEventResponse.getStatusCode()).body(updatedEventResponse);
     }
-    @DeleteMapping("/delete/{userId}/{eventId}")
-    public ResponseEntity<EventResponse> DeleteEvent(@PathVariable Long userId, @PathVariable Long eventId) {
+    @DeleteMapping("/delete/{eventId}")
+    public ResponseEntity<EventResponse> DeleteEvent( @PathVariable Long eventId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
         EventResponse deleteResponse = eventService.deleteEventById(  Long.valueOf(currentUser.getId()),  eventId);
