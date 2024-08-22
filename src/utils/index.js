@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useDispatch } from "react-redux";
-export const APP_URL = "http://localhost:9090/api";
+export const APP_URL = "http://localhost:8888/api";
 
 export const getEvents = async () => {
     

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo-sm.png";
 import google from "../assets/google.png";
 import facebook from "../assets/FacebookImage.webp";
@@ -11,12 +11,12 @@ import { setUser } from "../store/userSlice";
 
 const RegistrationForm = () => {
   const dispatch =  useDispatch()
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
-    role: "User"
   });
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMessage] = useState("");
@@ -36,16 +36,16 @@ const RegistrationForm = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${APP_URL}/auth/register`, {
+      const response = await axios.post(`${APP_URL}/auth/signup`, {
         fullName: formData.fullName,
         email: formData.email,
         password: formData.password,
-        role:formData.role
       });
       if (response.data) {
         alert(response.data?.message);
         dispatch(setUser(response.data));
         console.log(response.data);
+        navigate("/dashboard")
       }
       
       
@@ -129,20 +129,7 @@ const RegistrationForm = () => {
             required
           />
         </div>
-        <div className="mb-4">
-          <label htmlFor="role" className="block text-gray-700">
-            Role
-          </label>
-          <select
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            className="w-full h-[40px] border border-gray-300 rounded-md px-2"
-          >
-            <option value="User">User</option>
-            <option value="Organiser">Organiser</option>
-          </select>
-        </div>
+       
 
         <div className="mb-4">
           <button

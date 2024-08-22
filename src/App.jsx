@@ -18,6 +18,7 @@ import NewEvent from "./pages/NewEvent";
 import UserEvents from "./pages/UserEvents.jsx";
 import EditEvent from "./pages/EditEvent.jsx";
 import TicketingRegistrationPage from "./pages/TicketingAndRegistration.jsx";
+import QueryParam from "./auth/QueryParam.jsx";
 // import Landing from "../pages/Landing.jsx";
 // import Login from "../pages/Login.jsx";
 // import Events from "../pages/Events.jsx";
@@ -31,8 +32,8 @@ import TicketingRegistrationPage from "./pages/TicketingAndRegistration.jsx";
 // import Landing from "./pages/Landing.jsx";
 
 const PrivateRoutes = () => {
-  const user = useSelector((state) => state.user)?.user?.user;
-  return user ? <Outlet /> : <Navigate to="/login" />;
+  const user = useSelector((state) => state.user)?.user;
+  return user?.token ? <Outlet /> : <Navigate to="/login" />;
 };
 
 const PublicRoutes = () => {
@@ -51,6 +52,7 @@ const App = () => {
             <Route element={<PublicRoutes />}>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path={`/oauth/login`} element={<QueryParam/>}/>
             </Route>
             <Route path="/events" element={<Events />} />
             <Route
@@ -63,6 +65,11 @@ const App = () => {
               <Route path="/dashboard/new-event" element={<NewEvent />} />
               <Route path="/dashboard/my-events" element={<UserEvents />} />
               <Route path="/dashboard/my-events/:id" element={<EditEvent />} />
+              <Route/>
+
+              {/* response.sendRedirect("http://localhost:5173/oauth/login?status=success&userName=" + authenticatedUser.getEmail());
+                    } else { */}
+                        {/* // response.sendRedirect("http://localhost:5173/oauth/login?status=error"); */}
             </Route>
           </Routes>
         </div>

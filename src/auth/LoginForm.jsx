@@ -28,11 +28,15 @@ const LoginForm = () => {
     setError("");
 
     try {
-      const response = await axios.post(`${APP_URL}/auth/login`, formData);
+      const response = await axios.post(`${APP_URL}/auth/login`, formData, {
+        withCredentials: true,
+      });
       if (response.data) {
-        alert(response.data?.message);
+        alert("Login Successfully ");
         dispatch(setUser(response.data));
-        console.log(response.data);
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
       }
     } catch (error) {
       setError("Something went wrong! Please try again.");

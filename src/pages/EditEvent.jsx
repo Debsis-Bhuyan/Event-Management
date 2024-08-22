@@ -9,7 +9,6 @@ const EditEvent = () => {
   const eventId = useParams().id;
   return (
     <DashboardLayout>
-      <h2 className="text-2xl px-4 mt-10 mb-4">Edit Event</h2>
       <EditEventForm eventId={eventId} />
     </DashboardLayout>
   );

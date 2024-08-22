@@ -11,12 +11,20 @@ const EditEventForm = ({ eventId }) => {
   const [event, setEvent] = useState([]);
   const [infoMsg, setInfoMessage] = useState("");
   const [errorMsg, setErrorMessage] = useState("");
-  const user = useSelector((state) => state.user.user)?.user;
-
+  const user = useSelector((state) => state.user.user);
+console.log(user)
   useEffect(() => {
     const getEventById = async () => {
-      const response = await axios.get(`${APP_URL}/event/${eventId}`);
+      try {
+        console.log(eventId)
+      const response = await axios.get(`${APP_URL}/event/get-event/${eventId}`);
       setEvent(response.data?.event);
+      console.log(response.data)
+      } catch (error) {
+        console.log("Error retriving the event")
+        setEvent([])
+      }
+      
     };
     getEventById();
   }, []);
@@ -31,15 +39,22 @@ const EditEventForm = ({ eventId }) => {
   };
 
   const handleSave = async () => {
-    console.log(event);
+    console.log("Event data" + event);
     try {
       const response = await axios.put(
-        `${APP_URL}/event/update/1/${eventId}`,
-        event
+        `${APP_URL}/event/update/${eventId}`,
+        event,
+        {
+          headers:{
+            Authorization:`Bearer ${user?.token}`
+          }
+        }
       );
-      setEvent(response.data.event);
+      setEvent(response.data?.event);
+      alert("Event updated successfully")
+      console.log(response.data)
       setInfoMessage("Event updated successfully");
-      console.log("Updated Event:", response.data.event);
+      console.log("Updated Event:", response.data);
     } catch (error) {
       console.log("Event update failed", error);
       setErrorMessage("Event update failed");
@@ -52,9 +67,9 @@ const EditEventForm = ({ eventId }) => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row justify-between w-full px-4 py-8">
+    <div className="flex flex-col lg:flex-row justify-between w-full px-4 py-4">
       <div className="lg:w-1/2 w-full">
-        <h2 className="text-2xl font-bold mb-4">Edit Event</h2>
+        <h2 className="text-2xl font-bold mb-4 text-orange">Edit Event</h2>
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -63,7 +78,7 @@ const EditEventForm = ({ eventId }) => {
             <input
               type="text"
               name="title"
-              value={event.title}
+              value={event?.title}
               onChange={handleInputChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
@@ -74,7 +89,7 @@ const EditEventForm = ({ eventId }) => {
             </label>
             <textarea
               name="description"
-              value={event.description}
+              value={event?.description}
               onChange={handleInputChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />

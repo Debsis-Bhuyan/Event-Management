@@ -18,8 +18,10 @@ import { clearUser } from "../store/userSlice";
 
 const SideNav = ({ setOpen }) => {
   const userData = useSelector((state) => state.user.user);
-  const [user, setUser] = useState(userData?.user || null);
-  const dispatch =useDispatch();
+  console.log(userData);
+  const userDetails = useSelector((state) => state.userData.userData);
+  const [user, setUser] = useState(userData || null);
+  const dispatch = useDispatch();
   const loc = window.location.pathname.split("/")[2] || "overview";
 
   const handleLogout = () => {
@@ -29,23 +31,16 @@ const SideNav = ({ setOpen }) => {
   };
 
   const handleItemClick = (key) => {
-    if (key === "logout") {
-      handleLogout();
-      window.location = "/";
+    if (key === "events") {
+      window.location = `/dashboard`;
     } else {
-      if (key === "events") {
-        window.location = `/dashboard`;
-      }
-      else{
-
-        window.location = `/dashboard/${key === "overview" ? "" : key}`;
-      }
+      window.location = `/dashboard/${key === "overview" ? "" : key}`;
     }
   };
 
   const getInitials = () => {
-    if (!user) return "";
-    const name = user?.fullName;
+    if (!userDetails) return "";
+    const name = userDetails?.fullName;
     const names = name.split(" ");
     const firstLetters = names.map((word) => word.charAt(0));
     return firstLetters.slice(0, 2).join("").toUpperCase();
@@ -64,11 +59,11 @@ const SideNav = ({ setOpen }) => {
           key: "new-event",
           icon: <MdOutlineEditCalendar />,
         },
-        {
-          label: "Create Event Track",
-          key: "new-event-track",
-          icon: <FaHouse />,
-        },
+        // {
+        //   label: "Create Event Track",
+        //   key: "new-event-track",
+        //   icon: <FaHouse />,
+        // },
         { label: "My Events", key: "my-events", icon: <TbCalendarUser /> },
         {
           label: "Registered Events",
@@ -77,8 +72,6 @@ const SideNav = ({ setOpen }) => {
         },
       ],
     },
-    { label: "Settings", key: "settings", icon: <IoSettingsOutline /> },
-    { label: "Logout", key: "logout", icon: <AiOutlineLogout /> },
   ];
 
   return (
@@ -107,7 +100,6 @@ const SideNav = ({ setOpen }) => {
                   loc === item.key ? "bg-orange-600" : ""
                 }`}
                 to={`/dashboard${item.key}`}
-                // onClick={() => handleItemClick(item.key)}
               >
                 {item.icon}
                 <span className="ml-2">{item.label}</span>
@@ -131,6 +123,14 @@ const SideNav = ({ setOpen }) => {
               )}
             </div>
           ))}
+          <button
+            className={`flex items-center w-full p-3 text-left hover:bg-orange-600 rounded
+              `}
+            onClick={handleLogout}
+          >
+            <AiOutlineLogout />
+            <span className="ml-2">Logout</span>
+          </button>
         </nav>
       </div>
 
@@ -143,9 +143,9 @@ const SideNav = ({ setOpen }) => {
         </span>
         <br />
         <span className="mr-4 py-2 leading-4">
-          <span className="text-nowrap">{user?.fullName}</span>
+          <span className="text-nowrap">{userDetails?.fullName}</span>
           <br />
-          <span className="text-xs">{user?.email}</span>
+          <span className="text-xs">{userDetails?.email}</span>
         </span>
       </div>
     </div>

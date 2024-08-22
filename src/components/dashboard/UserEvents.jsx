@@ -5,9 +5,11 @@ import EventLoader from "../../globals/eventLoader";
 
 const Events = () => {
   const events = useSelector((state) => state.userEvent.userEvent);
+  console.log(events)
   const [loading, setLoading] = useState(false);
   const [filteredEvents, setFilteredEvents] = useState([]);
-  const [filter, setFilter] = useState("upcoming");
+  const [filter, setFilter] = useState("All");
+  
   
 
   useEffect(() => {
@@ -19,6 +21,7 @@ const Events = () => {
       } else if (filter === "past") {
         return events.filter((event) => new Date(event.startTime) < now);
       }
+     
 
       return events;
     };
@@ -36,6 +39,14 @@ const Events = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl">Events you are managing</h1>
         <div>
+          <button
+            className={`mr-2 px-4 py-2 ${
+              filter === "All" ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+            onClick={() => handleFilterChange("All")}
+          >
+            All Events
+          </button>
           <button
             className={`mr-2 px-4 py-2 ${
               filter === "upcoming" ? "bg-blue-500 text-white" : "bg-gray-200"

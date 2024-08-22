@@ -13,7 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { APP_URL } from "../../utils";
 
-import{ setUserEvent} from "../../store/userEventSlice" 
+import { setUserEvent } from "../../store/userEventSlice";
+import { setUserData } from "../../store/userDataSlice";
 const CardLoader = () => {
   return (
     <div className="w-[250px] h-[100px] flex justify-start gap-2 items-center bg-white px-4 border border-gray-100 rounded-md">
@@ -28,9 +29,12 @@ const CardLoader = () => {
 
 const Summary = () => {
   const dispatch = useDispatch();
-  const eventmy = useSelector(state => state.userEvent.userEvent)
+  const eventmy = useSelector((state) => state.userEvent.userEvent);
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user.user)?.user;
+  const user = useSelector((state) => state.user.user);
+  const userData = useSelector((state) => state.userData.userData);
+  console.log(userData);
+
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [userEvents, setUserEvents] = useState(eventmy);
@@ -38,20 +42,45 @@ const Summary = () => {
   useEffect(() => {
     const getUserEvents = async () => {
       setLoading(true);
-  
+
       try {
-        const response = await axios.get(`${APP_URL}/event/get-events/1`);
-        setUserEvents(response.data?.events)
-        dispatch(setUserEvent(response.data?.events))
+        const response = await axios.get(`${APP_URL}/event/get-events`, {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        });
+        setUserEvents(response.data?.events);
+        dispatch(setUserEvent(response.data?.events));
       } catch (error) {
         console.error("Error fetching user events:", error);
-        setUserEvents([])
+        setUserEvents([]);
       } finally {
         setLoading(false);
       }
     };
-  
-    getUserEvents(); 
+
+    const getUserDetails = async () => {
+      setLoading(true);
+
+      try {
+        const response = await axios.get(`http://localhost:8888/me`, {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        });
+        console.log(response.data);
+        dispatch(setUserData(response.data));
+        setUserEvents(response.data?.events);
+        dispatch(setUserEvent(response.data?.events));
+      } catch (error) {
+        console.error("Error fetching user events:", error);
+        setUserEvents([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getUserDetails();
+    getUserEvents();
   }, []);
 
   useEffect(() => {
@@ -62,7 +91,7 @@ const Summary = () => {
       const user_past_events = userEvents.filter((event) => {
         return new Date(event.endTime) <= new Date();
       });
-      
+
       const user_upcoming_events = userEvents.filter((event) => {
         return new Date(event.startTime) > new Date();
       });
@@ -89,10 +118,6 @@ const Summary = () => {
     }
   }, [userEvents]);
 
- 
-
-
-  
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -100,22 +125,19 @@ const Summary = () => {
         <div className=" w-full  md:grid-cols-2 grid gap-4">
           {data ? (
             <div className="w-full md:w-[360px] h-[100px] p-4 bg-white shadow-sm rounded-md">
-             
-                <div className="flex items-center gap-4">
-                  <div className="bg-blue-500 text-white p-4 rounded-full">
-                    <FaCalendarAlt size={30} />
-                  </div>
-                  <div>
-                    <h2 className="font-bold text-2xl">
-                      {data?.user_past_events?.length || 0}
-                    </h2>
-                    <p className="capitalize text-gray-600 text-sm">
-                      Past Events
-                    </p>
-                  </div>
+              <div className="flex items-center gap-4">
+                <div className="bg-blue-500 text-white p-4 rounded-full">
+                  <FaCalendarAlt size={30} />
                 </div>
-                
-              
+                <div>
+                  <h2 className="font-bold text-2xl">
+                    {data?.user_past_events?.length || 0}
+                  </h2>
+                  <p className="capitalize text-gray-600 text-sm">
+                    Past Events
+                  </p>
+                </div>
+              </div>
             </div>
           ) : (
             <CardLoader />
@@ -123,21 +145,19 @@ const Summary = () => {
 
           {data ? (
             <div className="w-full md:w-[360px] h-[100px] p-4 bg-white shadow-sm rounded-md">
-              
-                <div className="flex items-center gap-4">
-                  <div className="bg-yellow-500 text-white p-4 rounded-full">
-                    <FaCalendarCheck size={30} />
-                  </div>
-                  <div>
-                    <h2 className="font-bold text-2xl">
-                      {data?.user_upcoming_events?.length || 0}
-                    </h2>
-                    <p className="capitalize text-gray-600 text-sm">
-                      Upcoming Events
-                    </p>
-                  </div>
+              <div className="flex items-center gap-4">
+                <div className="bg-yellow-500 text-white p-4 rounded-full">
+                  <FaCalendarCheck size={30} />
                 </div>
-                
+                <div>
+                  <h2 className="font-bold text-2xl">
+                    {data?.user_upcoming_events?.length || 0}
+                  </h2>
+                  <p className="capitalize text-gray-600 text-sm">
+                    Upcoming Events
+                  </p>
+                </div>
+              </div>
             </div>
           ) : (
             <CardLoader />

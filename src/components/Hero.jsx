@@ -20,7 +20,7 @@ const Hero = () => {
                       Discover and Engage with Exciting Events in your area
                   </h1>
                   <button
-                    className="bg-primary font-medium py-3  w-[200px] text-white hover:scale-105 bg-red-800"
+                    className="bg-primary font-medium py-3  w-[200px] text-white hover:scale-105 "
                     onClick={() => navigate('/events')}
                   >
                       Find your next event
