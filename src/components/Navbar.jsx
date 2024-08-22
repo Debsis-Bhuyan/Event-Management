@@ -4,11 +4,7 @@ import { FaAlignJustify, FaTimes, FaUser, FaChevronDown } from "react-icons/fa";
 import { links } from "../data/links";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../store/userSlice.js";
-import axios from "axios";
-import { APP_URL } from "../utils/index.js";
-import { setUserData } from "../store/userDataSlice.js";
 
-// ok
 
 const Header = () => {
   const userInfo = useSelector((state) => state.user.user);

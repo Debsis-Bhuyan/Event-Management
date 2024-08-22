@@ -5,8 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import Gif from '../assets/steps.gif'
 
 
-// ok
-
 const Hero = () => {
     const navigate = useNavigate();
     return (

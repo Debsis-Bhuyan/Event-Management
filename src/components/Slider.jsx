@@ -35,11 +35,6 @@ const Slider = () => {
     );
   };
 
-  // const prevSlide = () => {
-  //   setIndex((prevIndex) =>
-  //     prevIndex === 0 ? slides.length - 1 : prevIndex - 1
-  //   );
-  // };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -54,7 +49,6 @@ const Slider = () => {
 
   return (
     <div className="flex bg-[#061621] mt-5 py-2 max-w-[90rem] mx-auto rounded-[8px] p-4 items-center justify-center flex-wrap">
-      {/* right */}
       <div className="w-full lg:w-1/2">
         <p className="text-white my-2 text-2xl font-bold lg:pr-[3rem] w-full">
           What can you do On our platform?
@@ -73,7 +67,6 @@ const Slider = () => {
         </button>
       </div>
 
-      {/* slider */}
       <div className="relative w-[300px] lg:w-[400px] h-[300px] lg:h-[400px] overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
           <div

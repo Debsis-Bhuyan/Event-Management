@@ -7,8 +7,7 @@ import {
   FaEye,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { CloudinaryImage, formatDate, getUser } from "../../helpers/utils.js";
-import { useDeleteEventMutation } from "../../redux/apis/apiSlice.js";
+import {  formatDate } from "../../helpers/utils.js";
 import { useDispatch, useSelector } from "react-redux";
 
 import bannerImage from "../../assets/events-image.jpg";
@@ -16,11 +15,10 @@ import axios from "axios";
 import { APP_URL } from "../../utils/index.js";
 import { setUserEvent } from "../../store/userEventSlice.js";
 
-// const user = getUser();
 
 const Event = ({ event }) => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user)?.user;
+  const user = useSelector((state) => state.user.user);
   const navigate = useNavigate();
   const [errorMsg, setErrorMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,20 +33,27 @@ const Event = ({ event }) => {
   const handleDelete = async () => {
     setLoading(true);
     try {
-      const response = await axios.delete(
-        `${APP_URL}/event/delete/1/${event.eventId}`
-      );
-      if (response.data?.status == 200) {
+      // Assuming you have the token stored in your state or context
+      const token = "your_token_here"; // Replace with the actual token
+  
+      const response = await axios.delete(`${APP_URL}/event/delete/${event?.eventId}`, {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+  
+      if (response.status === 200) {
         alert("Event deleted successfully");
       }
       console.log(response.data);
-      setUserLoadingUserData(true)
+      setUserLoadingUserData(true);
     } catch (error) {
       console.error("Error while deleting events:", error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     if (loadingUserData) {
@@ -56,7 +61,13 @@ const Event = ({ event }) => {
         setLoading(true);
 
         try {
-          const response = await axios.get(`${APP_URL}/event/get-events/1`);
+          const response = await axios.get(`${APP_URL}/event/get-events`,
+            {
+              headers:{
+                Authorization:"Bearer "+user?.token
+              }
+            }
+          );
           console.log(response.data);
           dispatch(setUserEvent(response.data?.events));
         } catch (error) {
@@ -97,7 +108,6 @@ const Event = ({ event }) => {
             </span>
             <Link
               className="p-2 bg-white border-2 font-bold cursor-pointer rounded"
-              // onClick={() => navigate(`/events/${event.eventId}`)}
               title="Preview"
               to={`/events/${event.eventId}`}
               state={{ event }}
@@ -105,13 +115,7 @@ const Event = ({ event }) => {
               <FaEye />
             </Link>
           </div>
-          {/* <div className="float-end">
-            {event?.attendees?.length ? (
-              <span className="cursor-pointer hover:underline" onClick={toggleModal}>
-                <strong>{event?.attendees?.length}</strong> Attendees
-              </span>
-            ) : '0 Attendees'}
-          </div> */}
+          
         </div>
         <h2 className="font-medium text-xl line-clamp-2">{event?.title}</h2>
         <p className="line-clamp-4">{event.description}</p>

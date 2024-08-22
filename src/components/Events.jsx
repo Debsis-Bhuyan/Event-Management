@@ -58,7 +58,7 @@ const Events = ({ simplified, nosearch }) => {
         filteredEvents = filteredEvents.sort((a, b) => {
           const dateA = new Date(a.startTime);
           const dateB = new Date(b.startTime);
-          return dateA - dateB; // Sort by ascending order of startTime
+          return dateA - dateB; 
         });
       } else if (sortOption === "title") {
         filteredEvents = filteredEvents.sort((a, b) =>
@@ -99,7 +99,6 @@ const Events = ({ simplified, nosearch }) => {
         </div>
       )}
       <div className="flex justify-center items-center mt-4">
-        {/* Filters */}
         <div className="flex flex-wrap gap-4">
           <select
             className="p-2 border rounded-lg"
@@ -107,7 +106,6 @@ const Events = ({ simplified, nosearch }) => {
             onChange={(e) => setLocation(e.target.value)}
           >
             <option value="">All Locations</option>
-            {/* Example locations */}
             <option value="new york">New York</option>
             <option value="los angeles">Los Angeles</option>
             <option value="san francisco">San Francisco</option>

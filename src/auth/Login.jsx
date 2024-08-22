@@ -18,7 +18,7 @@ const Auth = () => {
               className=" rounded-[20px] h-full  w-full  items-center text-center flex justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4
                              py-2 bg-[rgba(0,0,0,0.6)] text-white font-bold"
             >
-              <p className="text-center text-2xl font-bold">Join the Thrill </p>
+              <p className="text-center text-2xl font-bold">Join the Events </p>
             </div>
           </div>
 

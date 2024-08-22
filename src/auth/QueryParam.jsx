@@ -28,7 +28,7 @@ const QueryParam = () => {
           dispatch(setUser(response.data));
           setTimeout(() => {
             navigate("/dashboard");
-          }, 1000);
+          }, 400);
         }
       } catch (error) {
         setError("Something went wrong! Please try again.");

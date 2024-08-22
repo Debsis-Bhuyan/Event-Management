@@ -7,7 +7,6 @@ const Auth = () => {
     <div className="relative h-auto auth py-10 min-h-screen px-[4px]">
       <div className="max-w-[90rem] mx-auto bg-white h-auto lg:h-[700px] rounded-[20px] py-5 mt-20 lg:ps-10">
         <div className="flex justify-around items-center h-full">
-          {/* Container for image and button */}
           <div className="relative rounded-[20px] w-[45%] h-full hidden lg:block">
             <img
               src={image}

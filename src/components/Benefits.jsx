@@ -25,7 +25,7 @@ const Benefits = () => {
             className="mt-10 mb-10 text-white bg-primary border px-5 py-3 rounded font-semibold transition duration-300 ease-in-out hover:bg-red-600"
             onClick={() => navigate("/register")}
           >
-            Join us today
+            Join
           </button>
         </div>
       </div>

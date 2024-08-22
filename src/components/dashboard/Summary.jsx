@@ -68,7 +68,6 @@ const Summary = () => {
             Authorization: `Bearer ${user?.token}`,
           },
         });
-        console.log(response.data);
         dispatch(setUserData(response.data));
         setUserEvents(response.data?.events);
         dispatch(setUserEvent(response.data?.events));
@@ -85,9 +84,7 @@ const Summary = () => {
 
   useEffect(() => {
     if (userEvents) {
-      // const registered_events = userEvents?.filter((event) => {
-      //   return event.attendees.find((_user) => _user.id === user.id);
-      // });
+      
       const user_past_events = userEvents.filter((event) => {
         return new Date(event.endTime) <= new Date();
       });
@@ -95,25 +92,11 @@ const Summary = () => {
       const user_upcoming_events = userEvents.filter((event) => {
         return new Date(event.startTime) > new Date();
       });
-      // const registered_past_events = registered_events.filter((event) => {
-      //   return new Date(event.start_date) <= new Date();
-      // });
-      // const registered_upcoming_events = registered_events.filter((event) => {
-      //   return new Date(event.start_date) > new Date();
-      // });
-      // const registered_users = user_events.reduce(
-      //   (accumulator, event) => accumulator + event.attendees.length,
-      //   0
-      // );
-      // const registered_users = userEvents.reduce(
-      //   (accumulator, event) => accumulator + event?.registrations.length,
-      //   0
-      // );
+  
       setData({
         user_past_events,
         user_upcoming_events,
         userEvents,
-        // registered_users,
       });
     }
   }, [userEvents]);
@@ -217,83 +200,7 @@ const Summary = () => {
         </div>
       </div>
 
-      {/* <div className="flex justify-between align-middle mt-4 py-2 gap-5 flex-wrap lg:flex-nowrap">
-        <div className="w-full lg:w-1/2 py-2 bg-white shadow-sm rounded-md">
-          <h2 className="pb-5 text-lg">Events you Registered for</h2>
-          <div className="flex justify-between w-full flex-wrap gap-4">
-            {data ? (
-              <div className="w-full md:w-[250px] h-[100px] p-4 bg-white shadow-sm rounded-md">
-                <div className="flex items-center gap-4">
-                  <div className="bg-blue-500 text-white p-4 rounded-full">
-                    <FaCalendarAlt size={30} />
-                  </div>
-                  <div>
-                    <h2 className="font-bold text-2xl">
-                      {data?.registered_past_events?.length || 0}
-                    </h2>
-                    <p className="capitalize text-gray-600 text-sm">
-                      Past Events
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <CardLoader />
-            )}
-
-            {data ? (
-              <div className="w-full md:w-[250px] h-[100px] p-4 bg-white shadow-sm rounded-md">
-                <div className="flex items-center gap-4">
-                  <div className="bg-yellow-500 text-white p-4 rounded-full">
-                    <FaCalendarCheck size={30} />
-                  </div>
-                  <div>
-                    <h2 className="font-bold text-2xl">
-                      {data?.registered_upcoming_events?.length || 0}
-                    </h2>
-                    <p className="capitalize text-gray-600 text-sm">
-                      Upcoming Events
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <CardLoader />
-            )}
-          </div>
-        </div>
-
-        <div className="w-full lg:w-1/2 py-2 bg-white shadow-sm rounded-md">
-          <h2 className="pb-5 text-lg">Recommended Events</h2>
-          <div className="w-full flex justify-between flex-wrap gap-4">
-            <div className="w-full md:w-[250px] h-[100px] p-4 bg-white shadow-sm rounded-md">
-              <div className="flex items-center gap-4">
-                <div className="bg-gray-500 text-white p-4 rounded-full">
-                  <FaLocationArrow size={30} />
-                </div>
-                <div>
-                  <h2 className="font-bold text-2xl">2</h2>
-                  <p className="capitalize text-gray-600 text-sm">Local</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="w-full md:w-[250px] h-[100px] p-4 bg-white shadow-sm rounded-md">
-              <div className="flex items-center gap-4">
-                <div className="bg-blue-500 text-white p-4 rounded-full">
-                  <FaGlobe size={30} />
-                </div>
-                <div>
-                  <h2 className="font-bold text-2xl">8</h2>
-                  <p className="capitalize text-gray-600 text-sm">
-                    International
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
+    
 
       <div className="mt-5 bg-white shadow-sm rounded-md p-4">
         <h2 className="py-2 text-lg">Quick Actions</h2>

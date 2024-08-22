@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 function EventDetailPage({ event }) {
-  const user = useSelector((state) => state.user.user)?.user;
+  const user = useSelector((state) => state.user.user);
   console.log(user);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
@@ -22,7 +22,6 @@ function EventDetailPage({ event }) {
     setIsSubmitting(true);
 
     try {
-      // Replace this with your actual API endpoint
       const response = await axios.post(
         `/api/events/${event.eventId}/comments`,
         {
@@ -72,7 +71,6 @@ function EventDetailPage({ event }) {
         </div>
       )}
 
-      {/* Main Content */}
       <div className="flex flex-col mx-6 lg:flex-row">
         <div className="w-full  mb-6 lg:mb-0">
           <div className="bg-white shadow-md rounded mb-6 p-6">
@@ -91,18 +89,18 @@ function EventDetailPage({ event }) {
                 <p className="text-gray-700 mb-4">
                   Price: ${event.ticketPricing.basicPrice}
                 </p>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <Link className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" to={`/events/ticket-register/${event?.eventId}`} state={event}>
                   Purchase Basic
-                </button>
+                </Link>
               </div>
               <div className="border p-4 rounded">
                 <h3 className="text-xl font-semibold">Standard</h3>
                 <p className="text-gray-700 mb-4">
                   Price: ${event.ticketPricing.standardPrice}
                 </p>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <Link className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" to={`/events/ticket-register/${event?.eventId}`} state={event}>
                   Purchase Standard
-                </button>
+                </Link>
               </div>
               <div className="border p-4 rounded">
                 <h3 className="text-xl font-semibold">Premium</h3>
@@ -151,7 +149,7 @@ function EventDetailPage({ event }) {
           </div>
         </div>
 
-        {/* FAQ Section */}
+        
         <div className="mb-6">
           <h2 className="text-2xl font-bold mb-4">FAQs</h2>
           <div className="space-y-4">

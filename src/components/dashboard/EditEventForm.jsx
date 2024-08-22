@@ -12,14 +12,12 @@ const EditEventForm = ({ eventId }) => {
   const [infoMsg, setInfoMessage] = useState("");
   const [errorMsg, setErrorMessage] = useState("");
   const user = useSelector((state) => state.user.user);
-console.log(user)
   useEffect(() => {
     const getEventById = async () => {
       try {
         console.log(eventId)
       const response = await axios.get(`${APP_URL}/event/get-event/${eventId}`);
       setEvent(response.data?.event);
-      console.log(response.data)
       } catch (error) {
         console.log("Error retriving the event")
         setEvent([])
@@ -39,7 +37,9 @@ console.log(user)
   };
 
   const handleSave = async () => {
-    console.log("Event data" + event);
+    setErrorMessage("");
+    setInfoMessage("");
+
     try {
       const response = await axios.put(
         `${APP_URL}/event/update/${eventId}`,

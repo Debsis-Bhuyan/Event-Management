@@ -6,7 +6,6 @@ function EventFeedback() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Logic to send feedback and rating to the server
     console.log({ rating, feedback });
     alert('Thank you for your feedback!');
     setRating(0);

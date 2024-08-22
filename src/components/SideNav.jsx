@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { TbTimelineEventText, TbCalendarUser } from "react-icons/tb";
-import { FaHouse } from "react-icons/fa6";
 import {
   MdDoneOutline,
   MdOutlineEditCalendar,
@@ -8,9 +7,8 @@ import {
 } from "react-icons/md";
 import { IoMdMenu } from "react-icons/io";
 
-import { IoSettingsOutline } from "react-icons/io5";
 
-import { AiOutlineLogout } from "react-icons/ai"; // for Logout icon
+import { AiOutlineLogout } from "react-icons/ai"; 
 
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -46,7 +44,6 @@ const SideNav = ({ setOpen }) => {
     return firstLetters.slice(0, 2).join("").toUpperCase();
   };
 
-  // Custom navigation items
   const navItems = [
     { label: "Overview", key: "/ ", icon: <MdDashboard /> },
     {
@@ -59,11 +56,7 @@ const SideNav = ({ setOpen }) => {
           key: "new-event",
           icon: <MdOutlineEditCalendar />,
         },
-        // {
-        //   label: "Create Event Track",
-        //   key: "new-event-track",
-        //   icon: <FaHouse />,
-        // },
+       
         { label: "My Events", key: "my-events", icon: <TbCalendarUser /> },
         {
           label: "Registered Events",

@@ -5,7 +5,6 @@ import EventLoader from "../../globals/eventLoader";
 
 const Events = () => {
   const events = useSelector((state) => state.userEvent.userEvent);
-  console.log(events)
   const [loading, setLoading] = useState(false);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [filter, setFilter] = useState("All");

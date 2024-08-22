@@ -12,20 +12,14 @@ import { useSelector } from "react-redux";
 
 const Event = ({ eventId, eventData }) => {
   console.log(eventData?.event);
-  const navigate = useNavigate();
   const userData = useSelector((state) => state.user.user);
 
   const [event, setEvent] = useState(eventData?.event);
-  const [user, setUser] = useState(userData?.user);
-  const [registered, setRegistered] = useState(false);
   
   
-  const [errorMsg, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleRegister = async () => {};
-
-  const handleDelete = async () => {};
+  
 
   return (
     <div>
