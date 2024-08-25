@@ -1,11 +1,7 @@
 package com.debasis.eventManagement.utils;
 
-import com.debasis.eventManagement.model.Event;
-import com.debasis.eventManagement.model.TicketPricing;
-import com.debasis.eventManagement.model.User;
-import com.debasis.eventManagement.request.EventDTO;
-import com.debasis.eventManagement.request.TicketPricingDTO;
-import com.debasis.eventManagement.request.UserDTO;
+import com.debasis.eventManagement.model.*;
+import com.debasis.eventManagement.request.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -89,6 +85,35 @@ eventDTO.setOrganizer(userDTO);
         ticketPricing.setStandardPrice(ticketPricingDTO.getStandardPrice());
 
         return ticketPricing;
+    }
+
+    public static TicketDTO mapTicketEntityToTicketDTO(Ticket ticket) {
+        if (ticket == null) {
+            return null;
+        }
+
+        TicketDTO ticketDTO = new TicketDTO();
+        ticketDTO.setTicketType(ticket.getTicketType());
+        ticketDTO.setPrice(ticket.getPrice());
+
+        ticketDTO.setEvent(mapEventEntityToEventDTO(ticket.getEvent()));
+        ticketDTO.setAttendee(mapUserEntityToUserDTO(ticket.getUser()));
+        ticketDTO.setPayment(paymentEntityToPaymentDTO(ticket.getPayment()));
+
+        return ticketDTO;
+    }
+
+    public static PaymentDTO paymentEntityToPaymentDTO(Payment payment) {
+        if (payment == null) {
+            return null;
+        }
+
+        PaymentDTO paymentDTO = new PaymentDTO();
+        paymentDTO.setPaymentType(payment.getPaymentType());
+        paymentDTO.setAmount(payment.getAmount());
+        paymentDTO.setPaymentStatus(payment.getPaymentStatus());
+
+        return paymentDTO;
     }
 
 

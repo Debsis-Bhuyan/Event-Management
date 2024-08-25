@@ -7,4 +7,5 @@ public class TicketPricingDTO {
     private Double basicPrice;
     private Double standardPrice;
     private Double premiumPrice;
+
 }

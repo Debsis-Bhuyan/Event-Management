@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -65,6 +66,7 @@ public class EventServiceImpl implements EventService {
         EventResponse response = new EventResponse();
         try {
             List<Event> events= eventRepository.findByOrganizerId(userId);
+
             response.setEvents(events);
             response.setStatusCode(200);
             response.setMessage("User data get Successfully");

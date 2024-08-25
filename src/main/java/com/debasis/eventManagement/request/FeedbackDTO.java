@@ -5,16 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class TicketDTO {
-
-    private Integer ticketType;
-    private Double price;
-
-    private EventDTO event;
-    private UserDTO attendee;
-    private PaymentDTO payment;
+@NoArgsConstructor
+public class FeedbackDTO {
+    private Long userId;
+    private Long eventId;
+    private String message;
+    private LocalDateTime createdAt;
 }

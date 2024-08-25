@@ -68,7 +68,7 @@ public class SecurityConfiguration {
                         auth -> {
                             auth.requestMatchers(HttpMethod.OPTIONS, "*/**").permitAll();
                             auth
-                                    .requestMatchers("/api/auth/**", "/api/event/get-all", "/api/event/get-event/**", "*/login/oauth2/code/**", "/login-success")
+                                    .requestMatchers("/api/auth/**", "/api/event/get-all", "/api/event/get-event/**", "*/login/oauth2/code/**", "/login-success","/api/feedback/feed/**","/api/ticket/ticket-sales/**")
                                     .permitAll();
                             auth.anyRequest().authenticated();
                         }
