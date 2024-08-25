@@ -7,8 +7,7 @@ import {
 } from "react-icons/md";
 import { IoMdMenu } from "react-icons/io";
 
-
-import { AiOutlineLogout } from "react-icons/ai"; 
+import { AiOutlineLogout } from "react-icons/ai";
 
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,7 +15,6 @@ import { clearUser } from "../store/userSlice";
 
 const SideNav = ({ setOpen }) => {
   const userData = useSelector((state) => state.user.user);
-  console.log(userData);
   const userDetails = useSelector((state) => state.userData.userData);
   const [user, setUser] = useState(userData || null);
   const dispatch = useDispatch();
@@ -45,7 +43,7 @@ const SideNav = ({ setOpen }) => {
   };
 
   const navItems = [
-    { label: "Overview", key: "/ ", icon: <MdDashboard /> },
+    { label: "Overview", key: "", icon: <MdDashboard /> },
     {
       label: "Events",
       key: "/",
@@ -56,7 +54,7 @@ const SideNav = ({ setOpen }) => {
           key: "new-event",
           icon: <MdOutlineEditCalendar />,
         },
-       
+
         { label: "My Events", key: "my-events", icon: <TbCalendarUser /> },
         {
           label: "Registered Events",
@@ -128,14 +126,14 @@ const SideNav = ({ setOpen }) => {
       </div>
 
       <hr />
-      <div className="grid grid-cols-2 gap-6 grid-flow-col text-white ml-3 mt-4 cursor-pointer">
+      <div className="grid   grid-flow-col text-white ml-4 mt-4 cursor-pointer">
         <span className="mt-2 font-bold">
-          <span className="text-sm mr-2 bg-red-700 p-3 rounded-full">
+          <span className="text-sm mr-3  bg-red-700 p-3 rounded-full">
             {getInitials()}
           </span>
         </span>
         <br />
-        <span className="mr-4 py-2 leading-4">
+        <span className="mr-2 py-1 leading-4">
           <span className="text-nowrap">{userDetails?.fullName}</span>
           <br />
           <span className="text-xs">{userDetails?.email}</span>

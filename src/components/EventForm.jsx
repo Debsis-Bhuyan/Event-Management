@@ -5,7 +5,6 @@ import axios from "axios";
 
 function CreateEventForm() {
   const userData = useSelector((state) => state.user.user);
-  console.log(userData);
   const [event, setEvent] = useState({
     title: "",
     description: "",
@@ -59,7 +58,20 @@ function CreateEventForm() {
           },
         }
       );
-
+      setEvent({
+        title: "",
+        description: "",
+        location: "",
+        startTime: "",
+        endTime: "",
+        capacity: "",
+        ticketPricing: {
+          id: "",
+          basicPrice: "",
+          standardPrice: "",
+          premiumPrice: "",
+        },
+      });
       console.log("Event created successfully:", response.data);
       setSuccessMessage("Event created successfully");
     } catch (error) {
@@ -254,12 +266,11 @@ function CreateEventForm() {
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             disabled={loading}
           >
-          
             {loading ? "Event Creating..." : " Create Event"}
           </button>
         </div>
-        <div>{errorMessage && <p>{errorMessage}</p>}</div>
-        <div>{succesMessage && <p>{succesMessage}</p>}</div>
+        <div>{errorMessage && <p className="text-green-800" >{errorMessage}</p>}</div>
+        <div>{succesMessage && <p className="text-green-800">{succesMessage}</p>}</div>
       </form>
     </div>
   );

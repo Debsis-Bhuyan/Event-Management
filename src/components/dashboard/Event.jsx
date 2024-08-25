@@ -5,6 +5,8 @@ import {
   FaTrashAlt,
   FaEdit,
   FaEye,
+  FaUser,
+  FaUsers
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import {  formatDate } from "../../helpers/utils.js";
@@ -33,8 +35,6 @@ const Event = ({ event }) => {
   const handleDelete = async () => {
     setLoading(true);
     try {
-      // Assuming you have the token stored in your state or context
-      const token = "your_token_here"; // Replace with the actual token
   
       const response = await axios.delete(`${APP_URL}/event/delete/${event?.eventId}`, {
         headers: {
@@ -89,7 +89,7 @@ const Event = ({ event }) => {
         className="w-full h-[200px] object-cover rounded-t-md"
       />
 
-      <div className="flex flex-col gap-5 p-4">
+      <div className="flex flex-col gap-3 p-4">
         <div className="flex justify-between items-center">
           <div className="flex gap-4">
             <span
@@ -109,23 +109,34 @@ const Event = ({ event }) => {
             <Link
               className="p-2 bg-white border-2 font-bold cursor-pointer rounded"
               title="Preview"
-              to={`/events/${event.eventId}`}
+              to={`/dashboard/my-events/preview/${event.eventId}`}
               state={{ event }}
             >
               <FaEye />
+            </Link>
+            <Link
+              className="p-2 bg-white border-2 font-bold cursor-pointer rounded"
+              title="Attendee List"
+              to={`/dashboard/my-events/attendee/${event.eventId}`}
+            >
+              <FaUsers />
             </Link>
           </div>
           
         </div>
         <h2 className="font-medium text-xl line-clamp-2">{event?.title}</h2>
         <p className="line-clamp-4">{event.description}</p>
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-2 items-center">
           <FaCalendarAlt size={18} />
           <p>{formatDate(event?.startTime)}</p>
         </div>
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-2 items-center">
           <FaMapMarkerAlt size={18} />
           <p>{event?.location}</p>
+        </div>
+        <div className="flex gap-2 items-center">
+          <FaUser size={18} />
+          <p>Organizer- {event?.organizer?.fullName}</p>
         </div>
       </div>
 

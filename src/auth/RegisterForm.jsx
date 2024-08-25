@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/logo-sm.png";
+import logo from "../assets/logoHyS.png";
 import google from "../assets/google.png";
 import facebook from "../assets/FacebookImage.webp";
 import axios from "axios";
@@ -41,7 +41,7 @@ const RegistrationForm = () => {
         email: formData.email,
         password: formData.password,
       });
-      if (response.data) {
+      if (response.data?.token) {
         alert(response.data?.message);
         dispatch(setUser(response.data));
         console.log(response.data);
@@ -60,7 +60,7 @@ const RegistrationForm = () => {
     <div className="h-auto lg:h-full px-4 w-full lg:w-[45%] flex flex-col items-center overflow-y-auto no-scrollbar">
       <div className="flex flex-col justify-center items-center">
         <div>
-          <img src={logo} alt="Logo" className="h-11 object-cover" />
+          <img src={logo} alt="Logo" className="h-11 object-cover rounded" />
         </div>
         <h2 className="font-bold text-2xl">
           Welcome to Event Management System
@@ -147,6 +147,10 @@ const RegistrationForm = () => {
           <button
             type="button"
             className="w-full inline-flex items-center justify-center mb-5 py-2 px-4 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+            onClick={() => {
+              window.location.href =
+                "http://localhost:8888/oauth2/authorization/google";
+            }}
           >
             <img src={google} alt="Google" className="h-6 mr-2" />
             Sign in with Google
@@ -154,6 +158,10 @@ const RegistrationForm = () => {
           <button
             type="button"
             className="w-full inline-flex items-center justify-center mb-5 py-2 px-4 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+            onClick={() => {
+              window.location.href =
+                "http://localhost:8888/oauth2/authorization/facebook";
+            }}
           >
             <img src={facebook} alt="Facebook" className="h-8 mr-2" />
             Sign in with Facebook

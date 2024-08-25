@@ -33,7 +33,6 @@ const Summary = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
   const userData = useSelector((state) => state.userData.userData);
-  console.log(userData);
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -50,7 +49,10 @@ const Summary = () => {
           },
         });
         setUserEvents(response.data?.events);
-        dispatch(setUserEvent(response.data?.events));
+        console.log(response?.data?.events);
+        if (response.data?.events) {
+          dispatch(setUserEvent(response.data.events));
+        }
       } catch (error) {
         console.error("Error fetching user events:", error);
         setUserEvents([]);
@@ -69,8 +71,6 @@ const Summary = () => {
           },
         });
         dispatch(setUserData(response.data));
-        setUserEvents(response.data?.events);
-        dispatch(setUserEvent(response.data?.events));
       } catch (error) {
         console.error("Error fetching user events:", error);
         setUserEvents([]);
@@ -83,21 +83,22 @@ const Summary = () => {
   }, []);
 
   useEffect(() => {
+    const now= new Date()
     if (userEvents) {
-      
       const user_past_events = userEvents.filter((event) => {
-        return new Date(event.endTime) <= new Date();
+        return new Date(event.startTime) <= now;
       });
 
       const user_upcoming_events = userEvents.filter((event) => {
-        return new Date(event.startTime) > new Date();
+        return new Date(event.startTime) > now;
       });
-  
+
       setData({
         user_past_events,
         user_upcoming_events,
         userEvents,
       });
+      
     }
   }, [userEvents]);
 
@@ -175,7 +176,7 @@ const Summary = () => {
           {data ? (
             <div className="w-full md:w-[360px] h-[100px] p-4 bg-white shadow-sm rounded-md">
               <Link
-                to="/dashboard/registered-attendee"
+                to="/dashboard/registered-events"
                 className="flex items-center justify-between w-full"
               >
                 <div className="flex items-center gap-4">
@@ -183,11 +184,8 @@ const Summary = () => {
                     <FaUsers size={30} />
                   </div>
                   <div>
-                    <h2 className="font-bold text-2xl">
-                      {data?.registered_users || 0}
-                    </h2>
                     <p className="capitalize text-gray-600 text-sm">
-                      Registered Users
+                      Registered Events
                     </p>
                   </div>
                 </div>
@@ -199,8 +197,6 @@ const Summary = () => {
           )}
         </div>
       </div>
-
-    
 
       <div className="mt-5 bg-white shadow-sm rounded-md p-4">
         <h2 className="py-2 text-lg">Quick Actions</h2>

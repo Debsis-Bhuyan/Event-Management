@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import local from "../assets/venue.jpg";
 import globe from "../assets/globe.jpg";
 import venue from "../assets/events.jpg";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // ok
 
@@ -15,7 +15,7 @@ const Slider = () => {
     {
       image: globe,
       alt: "Image 1",
-      text: "Attend Global Events",
+      text: "Attend National Events",
     },
     {
       image: local,
@@ -25,7 +25,7 @@ const Slider = () => {
     {
       image: venue,
       alt: "Image 3",
-      text: "Manage Your Venue",
+      text: "Manage all events",
     },
   ];
 
@@ -45,7 +45,6 @@ const Slider = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const navigate = useNavigate();
 
   return (
     <div className="flex bg-[#061621] mt-5 py-2 max-w-[90rem] mx-auto rounded-[8px] p-4 items-center justify-center flex-wrap">
@@ -54,17 +53,17 @@ const Slider = () => {
           What can you do On our platform?
         </p>
 
-        <ol className="list-disc text-white text-base p-1">
+        <ol className="list-disc text-white text-base p-1 mb-6">
           <li>Create and Manage events</li>
           <li>Register to local and national events</li>
         </ol>
 
-        <button
+        <Link
           className="mt-10 mb-10 text-white border border-primary px-5 py-3 rounded font-semibold transition duration-300 ease-in-out hover:bg-red-600"
-          onClick={() => navigate("/events")}
+          to={"/events"}
         >
           Explore Events
-        </button>
+        </Link>
       </div>
 
       <div className="relative w-[300px] lg:w-[400px] h-[300px] lg:h-[400px] overflow-hidden">

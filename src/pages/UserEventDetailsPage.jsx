@@ -2,18 +2,18 @@ import React from 'react';
 import Event from '../components/EventDetails';
 import {useLocation, useParams} from "react-router-dom";
 import Layout from './Layout';
-import EventDetailPage from './EventDetailsPage';
+import UserEventDetails from './UserEventDetails';
 
 
-const EventDetails = () => {
+const UserEventDetailsPage = () => {
     const location =useLocation();
     const data= location.state;
-  
+   
     return (
         <Layout>
-            <EventDetailPage event={data?.event} />
+            <UserEventDetails event={data?.event} />
         </Layout>
     );
 };
 
-export default EventDetails;
+export default UserEventDetailsPage;

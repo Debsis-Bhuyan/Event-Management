@@ -15,23 +15,27 @@ const Events = ({ simplified, nosearch }) => {
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState("");
   const [sortOption, setSortOption] = useState("");
-  
+  const [loading, setLoading] = useState(false);
+  const [locationData, setLocationData] = useState("");
+  const [eventFilter, setEventFilter] = useState("All");
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get(`${APP_URL}/event/get-all`);
-        dispatch(setEvent(response.data)); 
-        console.log(response.data)
+        dispatch(setEvent(response.data));
       } catch (error) {
         console.error("Failed to fetch events:", error);
       }
     };
+    setLoading(true);
 
     fetchEvents();
+    setLoading(false);
   }, []);
-
+  console.log(locationData);
   useEffect(() => {
     let filteredEvents = eventsList;
 
@@ -58,88 +62,121 @@ const Events = ({ simplified, nosearch }) => {
         filteredEvents = filteredEvents.sort((a, b) => {
           const dateA = new Date(a.startTime);
           const dateB = new Date(b.startTime);
-          return dateA - dateB; 
+          return dateA - dateB;
         });
       } else if (sortOption === "title") {
         filteredEvents = filteredEvents.sort((a, b) =>
           a.title.localeCompare(b.title)
         );
       }
+      const now = new Date();
+
+      if (eventFilter === "upcoming") {
+        filteredEvents = filteredEvents.filter(
+          (event) => new Date(event.startTime) >= now
+        );
+      } else if (eventFilter === "past") {
+        filteredEvents = filteredEvents.filter(
+          (event) => new Date(event.startTime) < now
+        );
+      } else if (eventFilter === "All") {
+        filteredEvents = filteredEvents;
+      }
     }
 
     setEvents(filteredEvents);
-  }, [eventsList, searchTerm, location, category, sortOption, simplified]);
-
+  }, [
+    eventsList,
+    eventFilter,
+    searchTerm,
+    location,
+    category,
+    sortOption,
+    simplified,
+  ]);
 
   useEffect(() => {
     setEvents(eventsList);
   }, [eventsList]);
 
+  useEffect(() => {
+    const uniqueLocations = [...new Set(events.map((event) => event.location))];
+    setLocationData(uniqueLocations);
+  }, [events]);
   return (
     <div className="w-full">
-      {!nosearch && (
-        <div className="relative flex justify-center items-center text-center h-[50vh] w-full">
-          <img src={clap} alt="" className="w-full h-full object-cover" />
-          <div className="absolute w-full h-full bg-[rgba(0,0,0,0.6)] flex items-center justify-center flex-col">
-            <h1 className="text-4xl font-medium text-primary">All Events</h1>
-            <div className="relative mt-4">
-              <input
-                type="text"
-                placeholder="Search for events"
-                className="p-2 w-[90vw] md:w-[40vw] rounded-e-3xl"
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                }}
-              />
-              <button className="bg-[#e75022] rounded-3xl py-2 px-6 absolute right-0 top-0 flex text-white items-center font-bold">
-                <IoSearch className="mx-1" /> Search
-              </button>
+      {!loading && (
+        <div>
+          {!nosearch && (
+            <div className="relative flex justify-center items-center text-center h-[50vh] w-full">
+              <img src={clap} alt="" className="w-full h-full object-cover" />
+              <div className="absolute w-full h-full bg-[rgba(0,0,0,0.6)] flex items-center justify-center flex-col">
+                <h1 className="text-4xl font-medium text-primary">
+                  All Events
+                </h1>
+                <div className="relative mt-4">
+                  <input
+                    type="text"
+                    placeholder="Search for events"
+                    className="p-2 w-[90vw] md:w-[40vw] rounded-e-3xl"
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                    }}
+                  />
+                  <button className="bg-[#e75022] rounded-3xl py-2 px-6 absolute right-0 top-0 flex text-white items-center font-bold">
+                    <IoSearch className="mx-1" /> Search
+                  </button>
+                </div>
+              </div>
             </div>
+          )}
+          <div className="flex justify-center items-center mt-4">
+            <div className="flex flex-wrap gap-4">
+              <select
+                className="p-2 border rounded-lg"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              >
+                <option value="">All Locations</option>
+                {locationData &&
+                  locationData.map((ele, i) => (
+                    <option key={i} value={ele}>
+                      {ele}
+                    </option>
+                  ))}
+              </select>
+
+              <select
+                className="p-2 border rounded-lg"
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
+              >
+                <option value="">Sort By</option>
+                <option value="date">Date</option>
+                <option value="title">Title</option>
+              </select>
+              <select
+                className="p-2 border rounded-lg"
+                value={eventFilter}
+                onChange={(e) => setEventFilter(e.target.value)}
+              >
+                <option value="All">ALL Events</option>
+                <option value="upcoming">Upcoming Events</option>
+                <option value="past">Past Events</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 mt-4 px-6 py-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mx-auto w-fit gap-12">
+            {events?.map((event) => (
+              <Event event={event} key={event.eventId} />
+            ))}
+            {!events?.length && (
+              <h1 className="w-full text-left text-3xl">No events found</h1>
+            )}
           </div>
         </div>
       )}
-      <div className="flex justify-center items-center mt-4">
-        <div className="flex flex-wrap gap-4">
-          <select
-            className="p-2 border rounded-lg"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          >
-            <option value="">All Locations</option>
-            <option value="new york">New York</option>
-            <option value="los angeles">Los Angeles</option>
-            <option value="san francisco">San Francisco</option>
-          </select>
-          <select
-            className="p-2 border rounded-lg"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="">All Categories</option>
-            <option value="music">Music</option>
-            <option value="sports">Sports</option>
-            <option value="conference">Conference</option>
-          </select>
-          <select
-            className="p-2 border rounded-lg"
-            value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
-          >
-            <option value="">Sort By</option>
-            <option value="date">Date</option>
-            <option value="title">Title</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 mt-4 px-6 py-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mx-auto w-fit gap-12">
-        {events?.map((event) => (
-          <Event event={event} key={event.eventId} />
-        ))}
-        {!events?.length && (
-          <h1 className="w-full text-left text-3xl">No events found</h1>
-        )}
-      </div>
     </div>
   );
 };

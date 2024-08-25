@@ -27,7 +27,7 @@ const Hero = () => {
                     className="w-[200px] font-medium text-gray-700 py-3 px-5 border-2 border-primary hover:bg-red-800 hover:text-white"
                     onClick={() => navigate('/dashboard/new-event')}
                   >
-                      Publish an Event
+                      Create an Event
                   </button>
               </div>
               <div className="w-full lg:w-1/2">

@@ -4,6 +4,7 @@ import { FaAlignJustify, FaTimes, FaUser, FaChevronDown } from "react-icons/fa";
 import { links } from "../data/links";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../store/userSlice.js";
+import Logo  from "../assets/logoHyS.png";
 
 
 const Header = () => {
@@ -61,12 +62,12 @@ const Header = () => {
     >
       <div className="md:flex items-center justify-between py-4 md:px-10 px-7">
         <div
-          className="font-bold text-2xl cursor-pointer flex items-center gap-1 text-white hover:text-red-600"
+          className="font-bold text-2xl cursor- flex items-center gap-1 text-white hover:text-red-600"
           
         >
-          <Link to={"/"}>
-          
-          Event Management System
+          <Link to={"/"} className="flex items-center justify-between gap-2"> 
+          <img src={Logo} alt="" className="rounded h-12" />
+          <span> Events</span>
           </Link>
         </div>
         <div
@@ -129,7 +130,7 @@ const Header = () => {
                 )}
               </div>
             ) : (
-              <div className="flex font-semibold gap-2">
+              <div className="flex items-center font-semibold gap-2">
                 <FaUser />
                 <Link to="/login">Login</Link>
               </div>

@@ -1,6 +1,5 @@
 import React from "react";
-import dash from "../assets/dash.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { heros } from "../data/links";
 import { FaChevronRight } from "react-icons/fa6";
 
@@ -11,21 +10,22 @@ const Benefits = () => {
       <div className="flex flex-wrap lg:flex-nowrap mt-4 py-5">
         <div className="w-full">
           <p className="text-white mt-2 mb-8 text-2xl font-bold lg:pr-[3rem] w-full">
-            “Built for event enthusiasts, by event enthusiasts. Event Management
-            System - your go-to platform for seamless event management.”
+            “Designed by Hyscalar for event enthusiasts, the Event Management
+            System is your ultimate platform for seamless event management.”
           </p>
           <p className="text-white">
-            Welcome to Event Management system – Your Ultimate Event Management
-            Solution! From seamless planning to flawless execution, we've got
-            you covered. Elevate your events with our powerful tools and expert
-            support. Sign up now to experience the successful events!
+            Experience the future of event planning with Hyscalar's Event
+            Management System. Join a community of professionals who trust
+            Hyscalar to bring their visions to life and make every event a
+            remarkable success. Sign up today and take your events to the next
+            level!
           </p>
 
           <button
             className="mt-10 mb-10 text-white bg-primary border px-5 py-3 rounded font-semibold transition duration-300 ease-in-out hover:bg-red-600"
             onClick={() => navigate("/register")}
           >
-            Join
+            Join community
           </button>
         </div>
       </div>
@@ -51,9 +51,10 @@ const Benefits = () => {
               </div>
             </div>
             <div className="mt-2">
-              <button className="flex font-bold items-center text-primary">
-                View all events <FaChevronRight className="ml-2" />
-              </button>
+              <Link to={"/events"} className="flex font-bold items-center text-primary">
+                  View all events <FaChevronRight className="ml-2" />
+                
+              </Link>
             </div>
           </div>
         ))}

@@ -1,12 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Hero from "../components/Hero";
 import Benefits from "../components/Benefits";
 import Layout from "./Layout";
 import Slider from "../components/Slider";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { APP_URL } from "../utils";
-import { setEvent } from "../store/eventSlice";
+
 
 // ok
 

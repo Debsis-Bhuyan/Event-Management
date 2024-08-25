@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const Nav = () => {
-  const userData = useSelector((state) => state.user.user);
-  const [user, setUser] = useState(userData?.user || null);
+  const userData = useSelector((state) => state.userData.userData);
+  console.log(userData);
+  const [user, setUser] = useState(userData || null);
   const firstName = user && user.fullName ? user.fullName.split(" ")[0] : "";
 
   return (
@@ -14,15 +16,16 @@ const Nav = () => {
         </h2>
       </div>
 
-      <div className="lg:w-[500px] flex items-center">
+      {/* <div className="lg:w-[500px] flex items-center">
         <input
           type="text"
           placeholder="Search"
           className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-primary"
         />
       </div>
-
+*/}
       <div className="relative">
+        <Link to={"/dashboard/notification"}>
         <button className="p-3 bg-orange rounded-full text-white hover:bg-red-600 focus:outline-none">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -39,6 +42,7 @@ const Nav = () => {
             />
           </svg>
         </button>
+        </Link>
       </div>
     </div>
   );

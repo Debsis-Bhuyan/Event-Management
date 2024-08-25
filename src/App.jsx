@@ -19,17 +19,10 @@ import UserEvents from "./pages/UserEvents.jsx";
 import EditEvent from "./pages/EditEvent.jsx";
 import TicketingRegistrationPage from "./pages/TicketingAndRegistration.jsx";
 import QueryParam from "./auth/QueryParam.jsx";
-// import Landing from "../pages/Landing.jsx";
-// import Login from "../pages/Login.jsx";
-// import Events from "../pages/Events.jsx";
-// import EventDetails from "../pages/EventDetails.jsx";
-
-// import OverviewPage from "../pages/OverviewPage.jsx";
-
-// import { getUser } from "../helpers/utils.js";
-// import NotFound from "../pages/No";
-// import Register from "../pages/Register.jsx";
-// import Landing from "./pages/Landing.jsx";
+import UserEventDetailsPage from "./pages/UserEventDetailsPage.jsx";
+import AttendeePage from "./pages/AttendeePage.jsx";
+import RegisteredEvents from "./pages/RegisteredEvents.jsx";
+import NotificationPage from "./pages/NotificationPage.jsx";
 
 const PrivateRoutes = () => {
   const user = useSelector((state) => state.user)?.user;
@@ -64,12 +57,14 @@ const App = () => {
               <Route path="/dashboard" element={<OverviewPage />} />
               <Route path="/dashboard/new-event" element={<NewEvent />} />
               <Route path="/dashboard/my-events" element={<UserEvents />} />
+              <Route path="/dashboard/my-events/preview/:id" element={<UserEventDetailsPage />} />
               <Route path="/dashboard/my-events/:id" element={<EditEvent />} />
+              <Route path="/dashboard/my-events/attendee/:id" element={<AttendeePage />} />
+              <Route path="/dashboard/registered-events" element={<RegisteredEvents />} />
+              <Route path="//dashboard/notification" element={<NotificationPage />} />
               <Route/>
 
-              {/* response.sendRedirect("http://localhost:5173/oauth/login?status=success&userName=" + authenticatedUser.getEmail());
-                    } else { */}
-                        {/* // response.sendRedirect("http://localhost:5173/oauth/login?status=error"); */}
+              
             </Route>
           </Routes>
         </div>

@@ -23,23 +23,26 @@ const QueryParam = () => {
         const response = await axios.post(`${APP_URL}/auth/login`, formData, {
           withCredentials: true,
         });
-        console.log(response.data);
-        if (response.data) {
+        if (response.data?.token) {
           dispatch(setUser(response.data));
-          setTimeout(() => {
-            navigate("/dashboard");
-          }, 400);
+          
+        }
+        else{
+          navigate("/")
         }
       } catch (error) {
         setError("Something went wrong! Please try again.");
-      } finally {
       }
+    } else {
+      navigate("/");
+      alert("Event registrstion failed");
+      return;
     }
   };
 
   getUserData();
 
-  return <div>QueryParam</div>;
+  return <div></div>;
 };
 
 export default QueryParam;

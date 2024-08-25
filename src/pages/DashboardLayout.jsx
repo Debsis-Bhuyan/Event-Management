@@ -11,19 +11,16 @@ const DashboardLayout = ({ children }) => {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar for large screens */}
       <div className={`hidden lg:block w-64 bg-gray-800 text-white`}>
         <SideNav setOpen={setOpen} />
       </div>
 
-      {/* Sidebar for small screens */}
       {open && (
         <div className="absolute top-0 left-0 z-20 w-64 h-full bg-gray-800 text-white lg:hidden">
           <SideNav setOpen={setOpen} />
         </div>
       )}
 
-      {/* Menu icon for small screens */}
       {!open && (
         <div className="lg:hidden absolute top-10 left-3 z-30">
           <IoMdMenu
@@ -33,7 +30,6 @@ const DashboardLayout = ({ children }) => {
         </div>
       )}
 
-      {/* Main Content */}
       <div className="flex-1 overflow-y-auto bg-gray-100 p-8">
         {children}
       </div>

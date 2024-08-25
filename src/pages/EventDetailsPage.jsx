@@ -1,37 +1,52 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FaCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaMapMarkerAlt, FaUsers, FaUser } from "react-icons/fa";
 import { EventHighlightLoader } from "../globals/EventDetailsLoader";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { APP_URL } from "../utils";
+import LoginDialogBox from "../auth/LoginDialogBox";
+import TicketBookingDialogBox from "../components/TicketBookingDialogBox";
 
 function EventDetailPage({ event }) {
   const user = useSelector((state) => state.user.user);
-  console.log(user);
   const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
+  const [newComment, setNewComment] = useState({ message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [ticketSalesData, setTicketSalesData] = useState(null);
+  const [userEvents, setUserEvents] = useState([]);
+  const [registered, setRegistered] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [isLoginDialogOpen, setLoginDialogOpen] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState({ message: "" });
 
-  const handleCommentChange = (e) => {
-    setNewComment(e.target.value);
+  const openLoginDialog = () => setLoginDialogOpen(true);
+  const closeLoginDialog = () => setLoginDialogOpen(false);
+
+  const handleFeedbackMessage = (e) => {
+    setFeedbackMessage({ message: e.target.value });
   };
-
-  const handleCommentSubmit = async (e) => {
+  const handleMessage = (e) => {
+    setNewComment({ message: e.target.value });
+  };
+  const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
+    setSubmitting(true);
     try {
       const response = await axios.post(
-        `/api/events/${event.eventId}/comments`,
+        `${APP_URL}/userfeedback/create/${event?.eventId}`,
+        feedbackMessage,
         {
-          content: newComment,
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
         }
       );
-
-      if (response.status === 200) {
-        setComments([...comments, response.data]);
-        setNewComment("");
+      console.log(response.data);
+      if (response.data?.responseStatus === 201) {
+        alert("Feedback send Successfully");
+        setSubmitting(false);
       }
     } catch (error) {
       console.error("Error submitting comment:", error);
@@ -40,13 +55,97 @@ function EventDetailPage({ event }) {
     }
   };
 
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const response = await axios.post(
+        `${APP_URL}/feedback/submit/${event?.eventId}`,
+        newComment,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setComments([...comments, response.data?.feedback]);
+        setNewComment({ message: "" });
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchUserRegisteredData = async () => {
+      try {
+        const response = await axios.get(`${APP_URL}/ticket/attendee-events`, {
+          headers: {
+            Authorization: "Bearer " + user?.token,
+          },
+        });
+        if (response.data?.events) {
+          setUserEvents(response.data?.events);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching attendees:", error);
+        setLoading(false);
+      }
+    };
+    const fetchEventSalesData = async () => {
+      try {
+        const response = await axios.get(
+          `${APP_URL}/ticket/ticket-sales/${event?.eventId}`
+        );
+        
+        setTicketSalesData(response.data);
+      } catch (error) {
+        console.error("Error fetching attendees:", error);
+      }
+    };
+    const fetchCommentData = async () => {
+      try {
+        const response = await axios.get(
+          `${APP_URL}/feedback/feed/${event?.eventId}`
+        );
+
+        if (response.data?.feedbackDTOList) {
+          setComments(response.data?.feedbackDTOList);
+        }
+      } catch (error) {
+        console.error("Error fetching attendees:", error);
+      }
+    };
+    fetchEventSalesData();
+    if (user?.token) {
+      fetchUserRegisteredData();
+    }
+    fetchCommentData();
+  }, []);
+
+  useEffect(() => {
+    if (user?.token) {
+      setTimeout(() => {
+        const data = userEvents.filter((ele) => ele.eventId === event.eventId);
+        if (data.length > 0) {
+          setRegistered(true);
+        }
+      }, 10);
+    }
+  }, [userEvents]);
+
   return (
     <div className="w-full  ">
       {loading ? (
         <EventHighlightLoader />
       ) : (
         <div className="w-full flex flex-col sm:flex-row events-header  pt-16 imaage">
-          <div className="w-full sm:w-3/4 text-white gap-8 flex flex-col px-12 sm:px-10 justify-center text-2xl ">
+          <div className="w-full sm:w-3/4 text-white gap-8 flex flex-col px-12 pb-6 sm:px-10 justify-center text-2xl ">
             <h1 className="text-2xl lg:text-4xl font-medium ">
               {event?.title}
             </h1>
@@ -62,14 +161,60 @@ function EventDetailPage({ event }) {
               <p>{event?.location}</p>
             </span>
             <span className="flex gap-6">
-              <FaMapMarkerAlt />
-              <p className="text-orange">
+              <FaUser />
+              <p className="text-red-600">
                 Organized by: {event.organizer.fullName}
               </p>
             </span>
           </div>
+          <div className="w-full  flex justify-center sm:w-1/2  items-center mt-5 sm:mt-0">
+            <div className="w-full  ">
+              {registered ? (
+                <>
+                  <button className="w-[200px] font-medium text-white uppercase py-3 px-5 border-0 bg-primary">
+                    Registered
+                  </button>
+                  <span className="flex gap-4 items-center pt-4">
+                    <FaUsers />
+                    <p className="text-red-600">
+                      Registered attendee {ticketSalesData?.totalTicketsSold}
+                    </p>
+                  </span>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="w-[200px] font-medium text-white uppercase py-3 px-5 border-0 bg-primary"
+                    onClick={() => {
+                      openLoginDialog();
+                    }}
+                  >
+                    Register
+                  </button>
+                  <span className="flex gap-4 items-center pt-4">
+                    <FaUsers />
+                    <p className="text-red-600">
+                      Registered attendee {ticketSalesData?.totalTicketsSold}
+                    </p>
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       )}
+     
+      {isLoginDialogOpen &&
+        (user?.token ? (
+          <TicketBookingDialogBox
+            isOpen={openLoginDialog}
+            onClose={closeLoginDialog}
+            eventDetails={event}
+            user ={user}
+          />
+        ) : (
+          <LoginDialogBox isOpen={openLoginDialog} onClose={closeLoginDialog} />
+        ))}
 
       <div className="flex flex-col mx-6 lg:flex-row">
         <div className="w-full  mb-6 lg:mb-0">
@@ -87,29 +232,38 @@ function EventDetailPage({ event }) {
               <div className="border p-4 rounded">
                 <h3 className="text-xl font-semibold">Basic</h3>
                 <p className="text-gray-700 mb-4">
-                  Price: ${event.ticketPricing.basicPrice}
+                  Price: ₹{event.ticketPricing.basicPrice}
                 </p>
-                <Link className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" to={`/events/ticket-register/${event?.eventId}`} state={event}>
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  
+                >
                   Purchase Basic
-                </Link>
+                </button>
               </div>
               <div className="border p-4 rounded">
                 <h3 className="text-xl font-semibold">Standard</h3>
                 <p className="text-gray-700 mb-4">
-                  Price: ${event.ticketPricing.standardPrice}
+                  Price: ₹{event.ticketPricing.standardPrice}
                 </p>
-                <Link className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" to={`/events/ticket-register/${event?.eventId}`} state={event}>
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                 
+                >
                   Purchase Standard
-                </Link>
+                </button>
               </div>
               <div className="border p-4 rounded">
                 <h3 className="text-xl font-semibold">Premium</h3>
                 <p className="text-gray-700 mb-4">
-                  Price: ${event.ticketPricing.premiumPrice}
+                  Price: ₹{event.ticketPricing.premiumPrice}
                 </p>
-                <Link className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" to={`/events/ticket-register/${event?.eventId}`} state={event}>
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                 
+                >
                   Purchase Premium
-                </Link>
+                </button>
               </div>
             </div>
           </div>
@@ -117,39 +271,78 @@ function EventDetailPage({ event }) {
       </div>
 
       <footer className="bg-white shadow-md rounded mt-6 p-6">
-        <h2 className="text-2xl font-bold mb-4">Comments & Discussion</h2>
-        {user && (
-          <form onSubmit={handleCommentSubmit} className="mb-4">
-            <textarea
-              className="w-full p-4 border rounded mb-4"
-              placeholder="Add a comment..."
-              value={newComment}
-              onChange={handleCommentChange}
-              required
-            />
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Submitting..." : "Post Comment"}
-            </button>
-          </form>
-        )}
-        <div className="mb-6">
-          <div className="space-y-4">
-            {comments.map((comment, index) => (
-              <div key={index} className="p-4 border rounded">
-                <p className="text-gray-800">{comment.content}</p>
-                <p className="text-gray-500 text-sm">
-                  {new Date(comment.createdAt).toLocaleString()}
-                </p>
-              </div>
-            ))}
+        <div>
+          <h2 className="text-2xl font-bold mb-4">Send Feedback</h2>
+          {user ? (
+            <form onSubmit={handleFeedbackSubmit} className="mb-4">
+              <textarea
+                className="w-full p-4 border rounded mb-4"
+                placeholder="Write feedback..."
+                value={feedbackMessage.message}
+                onChange={handleFeedbackMessage}
+                required
+              />
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                disabled={submitting}
+              >
+                {submitting ? "Feedback Submitting..." : "Post Feedback"}
+              </button>
+            </form>
+          ) : (
+            <div className="flex items-center justify-between py-4 ">
+              <Link
+                to={"/login"}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Login to Feedback in this event
+              </Link>
+            </div>
+          )}
+        </div>
+        <div>
+          <h2 className="text-2xl font-bold mb-4">Comments & Discussion</h2>
+          {user ? (
+            <form onSubmit={handleCommentSubmit} className="mb-4">
+              <textarea
+                className="w-full p-4 border rounded mb-4"
+                placeholder="Add a comment..."
+                value={newComment.message}
+                onChange={handleMessage}
+                required
+              />
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Submitting..." : "Post Comment"}
+              </button>
+            </form>
+          ) : (
+            <div className="flex items-center justify-between py-4 ">
+              <Link
+                to={"/login"}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Login to comment in this event
+              </Link>
+            </div>
+          )}
+          <div className="mb-6">
+            <div className="space-y-4">
+              {comments.map((comment, index) => (
+                <div key={index} className="p-1 border rounded">
+                  <p className="text-gray-800">{comment?.message}</p>
+                  <p className="text-gray-500 text-sm">
+                    {new Date(comment.createdAt).toLocaleString()}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-
-        
         <div className="mb-6">
           <h2 className="text-2xl font-bold mb-4">FAQs</h2>
           <div className="space-y-4">
